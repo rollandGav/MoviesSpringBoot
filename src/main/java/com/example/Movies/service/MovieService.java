@@ -28,4 +28,53 @@ public class MovieService {
     public void delete(String title){
         repository.delete(title);
     }
+
+    public Optional<Movie> markWatched(String title) {
+        Optional<Movie> maybeMovie = repository.findByTitle(title);
+        if (maybeMovie.isPresent()){
+            Movie m =maybeMovie.get();
+            m.setWatched(true);
+            repository.save(m);
+            return Optional.of(m);
+        }
+        return Optional.empty();
+    }
+
+    public Optional<Movie> markUnWatched(String title) {
+        Optional<Movie> maybeMovie = repository.findByTitle(title);
+        if (maybeMovie.isPresent()){
+            Movie m =maybeMovie.get();
+            if (m.isWatched()) {
+                m.setWatched(false);
+                repository.save(m);
+            }
+            return Optional.of(m);
+        }
+        return Optional.empty();
+    }
+
+    public Optional<Movie> updateRating(String title, Double rating) {
+        Optional<Movie> maybeMovie = repository.findByTitle(title);
+        if (maybeMovie.isPresent()){
+            Movie m =maybeMovie.get();
+            m.setRating(rating);
+            repository.save(m);
+            return Optional.of(m);
+        }
+        return Optional.empty();
+    }
+
+    public Optional<Movie> updateMovie(String title, Movie movie) {
+        Optional<Movie> maybeMovie = repository.findByTitle(title);
+        if (maybeMovie.isPresent()){
+            Movie m =maybeMovie.get();
+            m.setDirector(movie.getDirector());
+            m.setReleaseDate(movie.getReleaseDate());
+            m.setRating(movie.getRating());
+            m.setWatched(movie.isWatched());
+            repository.save(m);
+            return Optional.of(m);
+        }
+        return Optional.empty();
+    }
 }
